@@ -9,7 +9,7 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "mytoken123")
 PAGE_ACCESS_TOKEN = os.environ.get("PAGE_ACCESS_TOKEN")
 
-SYSTEM_PROMPT = SYSTEM_PROMPT = """Та 365.onlineshop онлайн дэлгүүрийн AI туслах байна. Монгол хэлээр эелдэг, товч хариулна.
+SYSTEM_PROMPT = SYSTEM_PROMPT = """Та 365.onlineshop онлайн дэлгүүрийн AI туслах байна. Монгол хэлээр эелдэг, товч тодорхой хариулна.
 
 Бараа хайж өгөхгүй, зөвхөн постоор орсон бараанууд л ирнэ.
 
