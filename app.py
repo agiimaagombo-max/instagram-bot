@@ -28,13 +28,15 @@ def get_claude_reply(user_message):
     return response.content[0].text
 
 def send_dm(recipient_id, message_text):
-    url = "https://graph.facebook.com/v18.0/me/messages"
+    INSTAGRAM_ACCOUNT_ID = "17841442950882604"
+    url = f"https://graph.facebook.com/v18.0/{INSTAGRAM_ACCOUNT_ID}/messages"
     payload = {
         "recipient": {"id": recipient_id},
         "message": {"text": message_text},
         "access_token": PAGE_ACCESS_TOKEN
     }
-    requests.post(url, json=payload)
+    r = requests.post(url, json=payload)
+    print(f"Send DM response: {r.status_code} {r.text}")
 
 @app.route("/webhook", methods=["GET"])
 def verify():
