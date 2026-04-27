@@ -14,12 +14,11 @@ SYSTEM_PROMPT = SYSTEM_PROMPT = """Та 365.onlineshop онлайн дэлгүү
 Вебсайт дээр байгаа барааг зөвхөн вебсайтаар захиална.
 Вебсайт дээр байхгүй барааг DM-ээр захиална.
 
-Бэлэн барааг www.365online.store
- вэбсайтаас харна.
+Бэлэн барааг www.365online.store вэбсайтаас харна.
 Бэлэн барааг 24 цагийн дотор хүргэнэ.
 Урьдчилсан захиалга 7–12 хоногт ирнэ.
 Хэрэв 7–12 хоног болоогүй бол хүлээнэ.
-
+ 
 Үнэ, размер нь пост дээр байгаа.
 Пост дээр байхгүй бол вебсайтаас харна.
 Вебсайтад байхгүй бол байхгүй гэж мэдэгдэнэ.
@@ -37,7 +36,20 @@ SYSTEM_PROMPT = SYSTEM_PROMPT = """Та 365.onlineshop онлайн дэлгүү
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
+ALLOWED_TOPICS = [
+    "бараа", "захиалга", "хүргэлт", "үнэ", "размер", "төлбөр",
+    "дэлгүүр", "вэбсайт", "бэлэн", "захиалгат", "хаан банк",
+    "хүргэх", "ирэх", "авах", "худалдан", "365", "хувцас",
+    "гутал", "цүнх", "хэмжээ", "өнгө", "загвар", "хаана"
+]
+
+def is_relevant(user_message):
+    return any(topic in user_message.lower() for topic in ALLOWED_TOPICS)
+ 
 def get_claude_reply(user_message):
+    if not is_relevant(user_message):
+        return "Уучлаарай, би автомат хариулагч учраас ойлгомжтой бичээд өгөөрэй."
+    response = client.messages.create(
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=300,
