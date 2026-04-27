@@ -15,8 +15,7 @@ SYSTEM_PROMPT = """Та 365.onlineshop онлайн дэлгүүрийн AI ту
 Үнэ, размер постон дээр байгаа. Байхгүй бол www.365online.store сайтаас харна.
 Захиалга DM эсвэл вэбсайтаар 24/7 авдаг.
 Хаан банк: MN040005005727168509
-DM захиалгад гүйлгээний утганд Instagram нэр, утасны дугаар бичнэ.
-Вэбсайт захиалгад захиалгын дугаар бичнэ."""
+DM захиалгад гүйлгээний утганд Instagram нэр, утасны дугаар бичнэ."""
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
@@ -46,15 +45,20 @@ def verify():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    data = request.json
-    if data.get("object") == "instagram":
-        for entry in data.get("entry", []):
-            for msg_event in entry.get("messaging", []):
-                sender_id = msg_event["sender"]["id"]
-                if "message" in msg_event and "text" in msg_event["message"]:
-                    user_text = msg_event["message"]["text"]
-                    reply = get_claude_reply(user_text)
-                    send_dm(sender_id, reply)
+    try:
+        data = request.json
+        if data and data.get("object") == "instagram":
+            for entry in data.get("entry", []):
+                messaging = entry.get("messaging", [])
+                for msg_event in messaging:
+                    if "sender" in msg_event and "message" in msg_event:
+                        sender_id = msg_event["sender"]["id"]
+                        if "text" in msg_event["message"]:
+                            user_text = msg_event["message"]["text"]
+                            reply = get_claude_reply(user_text)
+                            send_dm(sender_id, reply)
+    except Exception as e:
+        print(f"Error: {e}")
     return jsonify({"status": "ok"})
 
 if __name__ == "__main__":
